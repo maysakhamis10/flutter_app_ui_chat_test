@@ -2,7 +2,6 @@ import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_ui_chat/Utils/Message.dart';
-// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 class MyChatScreen extends StatefulWidget {
@@ -16,12 +15,14 @@ class MyChatScreen extends StatefulWidget {
 class _MyChatState extends State<MyChatScreen> {
 
   final List<Message> _messages = <Message>[];
-  var width ;
+  var width ,height;
   final _textController = TextEditingController();
+  bool isSendMoney = false ;
 
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
+    height= MediaQuery.of(context).size.height;
     DateTime time = DateTime.now();
     String formattedDate = DateFormat('hh:mm').format(time);
     return  Scaffold(
@@ -37,19 +38,23 @@ class _MyChatState extends State<MyChatScreen> {
             child: new Container(
               child: new Column(
                 children: <Widget>[
-                  new Flexible(
-                    child: new ListView.builder(
-                      padding: new EdgeInsets.all(8.0),
-                      reverse: true,
-                      itemBuilder: (_, int index) => _messages[index],
-                      itemCount: _messages.length,
-                    ),
-                  ),
+                  buildListOfMessages(),
                   new Divider(height: 1.0),
                   buildBottomBar(formattedDate),
                 ],
               ),
             )));
+  }
+
+  Widget buildListOfMessages(){
+    return Flexible(
+      child: new ListView.builder(
+        padding: new EdgeInsets.all(8.0),
+        reverse: true,
+        itemBuilder: (_, int index) => _messages[index],
+        itemCount: _messages.length,
+      ),
+    );
   }
 
   void _sendMsg(String msg, String messageDirection, String date) {
@@ -64,6 +69,7 @@ class _MyChatState extends State<MyChatScreen> {
       );
       setState(() {
         _messages.insert(0, message);
+        isSendMoney = false ;
       });
     }
   }
@@ -75,8 +81,6 @@ class _MyChatState extends State<MyChatScreen> {
 
   @override
   void dispose() {
-    // Every listener should be canceled, the same should be done with this stream.
-    // Clean up the controller when the Widget is disposed
     _textController.dispose();
     super.dispose();
   }
@@ -93,7 +97,9 @@ class _MyChatState extends State<MyChatScreen> {
             IconButton(
               icon: Image.asset('assets/images/backbtn.png'),
               //iconSize: 50,
-              onPressed: () {},
+              onPressed: () {
+
+              },
             ),
             CircleAvatar(
                 radius: 20,
@@ -101,10 +107,13 @@ class _MyChatState extends State<MyChatScreen> {
             ),
             Text("Gbemiosla Adegbite" , style: TextStyle(color: Colors.black),),
             IconButton(
-              icon: Image.asset('assets/images/greenbtn.png'),
-              //iconSize: 50,
+              icon: isSendMoney ?  Image.asset('assets/images/greenbtn.png')  : Image.asset('assets/images/greybtn.png'),
               onPressed: () {
                 //change color of bottom bar
+                setState(() {
+                  isSendMoney = true ;
+                });
+
               },
             ),
             IconButton(
@@ -120,78 +129,82 @@ class _MyChatState extends State<MyChatScreen> {
 
 
   Widget buildBottomBar(String formattedDate) {
-    return Container(
-        decoration: BoxDecoration(color: Colors.white),
-        child: IconTheme(
-            data: IconThemeData(color: Theme
-                .of(context)
-                .accentColor),
-            child: Container(
-              // padding: EdgeInsets.all(10.0),
-              child: Row(
-                children: <Widget>[
-                  GestureDetector(
-                        onTap: () => print('hello'),
-                        child: Container(
-                          child:   IconButton(
-                            icon: Image.asset('assets/images/add.png',width: 20,height: 20,),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                  Container(
-                       margin:EdgeInsets.all(5.0),
-                        width: width*0.7,
-                        decoration: new BoxDecoration (
-                          border: Border.all(color: Colors.black38),
-                            borderRadius:  BorderRadius.all(Radius.circular(20.0)),
-                            color: Colors.white
-                        ),
-                       child :
-                       Container(
-                         padding: EdgeInsets.all(2.0),
-                         child: Row(
-                           children: [
-                             Flexible(
-                               child :TextField(
-                                 controller: _textController,
-                                 decoration: new InputDecoration.collapsed(
-                                     hintText: ""),
-                               ),
-                             ),
-                             IconButton(
-                               icon: Image.asset('assets/images/cam.png',width: 20,height: 20,),
-                               onPressed: () {},
-                             ),
-                           ],
-                         ),
-                       ),
-                      ),
-                  Container(
-                    //margin: EdgeInsets.only(left :10.0),
-                    child: new IconButton(
-                        icon: Image.asset(
-                            "assets/images/send.png"),
-                        onPressed: () =>
+    return Center(
+      child: Container(
+          decoration: BoxDecoration(color: Colors.white),
+          child: IconTheme(
+              data: IconThemeData(color: Theme.of(context).accentColor),
+              child: Container(
+                child: Row(
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () => print('hello'),
+                      child: Container(
+                        child:   IconButton(
+                          icon: Image.asset('assets/images/add.png',width: 20,height: 20,),
+                          onPressed: () {
                             _sendMsg(
                                 _textController.text,
-                                'left',
-                                formattedDate)),
-                  ),
-                ],
-              ),
-            )));
-
-
-  }
-  Widget sendAttach(){
-    return Row(
-      children: [
-        Icon(Icons.record_voice_over_sharp,),
-        Icon(Icons.camera,)
-      ],
+                                'right',
+                                formattedDate);
+                          },
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin:EdgeInsets.all(5.0),
+                      width: width*0.7,
+                      height: 40,
+                      decoration: new BoxDecoration (
+                          border: Border.all(color: Colors.black38),
+                          borderRadius:  BorderRadius.all(Radius.circular(20.0)),
+                          color: isSendMoney ? Colors.green : Colors.white
+                      ),
+                      child :
+                      Container(
+                        padding: EdgeInsets.only(left: 10.0),
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child :TextField(
+                                style: TextStyle(color: isSendMoney ? Colors.white : Colors.grey),
+                                controller: _textController,
+                                decoration: new InputDecoration.collapsed(hintText: ""),
+                              ),
+                            ),
+                            IconButton(
+                              icon: Image.asset('assets/images/cam.png',width: 30,height: 30,),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      child: new IconButton(
+                          icon: Image.asset(
+                              "assets/images/send.png"),
+                          onPressed: () =>
+                              _sendMsg(
+                                  _textController.text,
+                                  'left',
+                                  formattedDate)),
+                    ),
+                  ],
+                ),
+              ))),
     );
+
+
   }
+
+
+  void sendAttach(){
+
+
+
+  }
+
 
 
 
