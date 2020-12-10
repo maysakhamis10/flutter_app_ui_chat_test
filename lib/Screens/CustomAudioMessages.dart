@@ -2,7 +2,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_ui_chat/Utils/AppColors.dart';
 import 'package:flutter_app_ui_chat/Utils/Dimens.dart';
-import 'package:flutter_app_ui_chat/Utils/Images.dart';
 import 'package:flutter_app_ui_chat/Utils/Styles.dart';
 
 
@@ -46,12 +45,12 @@ class MessagesCustomAudioState extends State<MessagesCustomAudio> {
       children: [
         Container(
             constraints: BoxConstraints(
-              minWidth: DIMEN_200,
-              maxWidth: DIMEN_230,
+              minWidth: DIMEN_230,
+              maxWidth: DIMEN_280,
             ),
             margin: EdgeInsets.all(DIMEN_10),
             decoration: BoxDecoration(
-                color: BLUE_WHITE,
+                color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(8.0))),
             child: FittedBox(
               child: Row(
@@ -61,13 +60,13 @@ class MessagesCustomAudioState extends State<MessagesCustomAudio> {
                 children: <Widget>[
                   IconButton(
                       icon: !_isPlaying
-                          ? Image.asset(
-                              PLAY_AUDIO_MESSAGE,
-                              color: WHITE,
+                          ? Icon(
+                              Icons.play_arrow,
+                              color: Colors.blue,
                             )
                           : Icon(
                               Icons.pause,
-                              color: WHITE,
+                              color: Colors.blue,
                             ),
                       onPressed: () {
                         !_isPlaying && position.inMilliseconds == 0
@@ -107,11 +106,9 @@ class MessagesCustomAudioState extends State<MessagesCustomAudio> {
                             padding: EdgeInsets.all(0.0),
                             iconSize: 0.0,
                             enableFeedback: false,
-                            icon: Image.asset(
-                              HEADPHONE_AUDIO_MESSAGE,
-                              color: WHITE,
-                              height: 20,
-                              fit: BoxFit.fitHeight,
+                            icon:Icon(
+                              Icons.headset,
+                              color: Colors.blue,
                             ),
                             onPressed: () {
                             }),
@@ -122,7 +119,7 @@ class MessagesCustomAudioState extends State<MessagesCustomAudio> {
                       ],
                     ),
                     decoration: BoxDecoration(
-                        color: DARK_YELLOW_AUDIO_MESSAGE_BG_COLOR,
+                        color: Colors.pinkAccent,
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(DIMEN_8),
                             topLeft: Radius.circular(DIMEN_8),
