@@ -1,25 +1,35 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_app_ui_chat/Screens/CustomAudioMessages.dart';
 import 'package:flutter_app_ui_chat/Screens/bubble_layout.dart';
 
 class Message extends StatelessWidget {
-  Message({this.msg, this.direction, this.dateTime});
+
+  Message({this.msg, this.direction, this.dateTime,this.filePath, this.isAttach , this.isAudio});
 
   final String msg;
+  final String filePath;
   final String direction;
   final String dateTime;
+  final bool  isAttach;
+  final bool  isAudio;
   var width  ;
 
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width ;
-    return new Container(
+    return  Container(
         margin: const EdgeInsets.symmetric(vertical: 10.0),
         child: direction == 'left' ?
+            isAudio? MessagesCustomAudio(url: filePath, time:'') :
         buildBubbleMessage(
             Alignment.bottomLeft, msg, Color(0xff25A3FF), Colors.white, true,
             context) :
         buildBubbleMessage(
             Alignment.topRight, msg, Colors.white, Colors.black, false, context)
+
+
     );
   }
 
@@ -30,7 +40,11 @@ class Message extends StatelessWidget {
         children: [
           Align(
             alignment: alignment,
-            child: CustomPaint(
+            child:
+            isAttach ? Container(
+              child: Image.file(File(filePath)),
+              margin: EdgeInsets.all(10.0),
+            ): CustomPaint(
               painter: ChatBubble(color: cardColor, alignment: alignment),
               child: Container(
                 margin: EdgeInsets.all(10),
@@ -62,15 +76,17 @@ class Message extends StatelessWidget {
                           color: textColor,
                         ),
                       ),
+
                       width:width * 0.60,
                     ),
                   ],
                 ),
               ),
             ),
-          ), Container(
-            alignment: isLeft? Alignment.topLeft : Alignment.topRight,
-          margin: isLeft? EdgeInsets.only(top: 4.0,left: width*0.55) : EdgeInsets.only(top: 4.0,right: 4.0),
+          ),
+          Container(
+          alignment: isLeft? Alignment.topLeft : Alignment.topRight,
+          margin: isLeft? EdgeInsets.only(top: 4.0,left: width*0.5) : EdgeInsets.only(top: 4.0,right: 4.0),
             child: ConstrainedBox(
                 constraints: BoxConstraints(minWidth: 40),
                 child: IntrinsicWidth(
