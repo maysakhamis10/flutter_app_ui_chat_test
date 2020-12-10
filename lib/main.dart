@@ -4,7 +4,6 @@ import 'Screens/ChatScreen.dart';
 
 main() {
   runApp(new MaterialApp(
-    title: 'Fluter',
     debugShowCheckedModeBanner: false,
     theme: new ThemeData(
       accentColor: Colors.blue,

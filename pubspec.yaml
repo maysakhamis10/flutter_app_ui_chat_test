@@ -24,7 +24,6 @@ dependencies:
   flutter:
     sdk: flutter
   intl: ^0.15.7
-  fluttertoast: ^2.0.7
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -48,10 +47,14 @@ flutter:
   assets:
     - assets/images/backbtn.png
     - assets/images/btnmoney.png
-    - assets/images/send_in.png
-    - assets/images/send_out.png
+    - assets/images/send.png
     - assets/images/greenbtn.png
     - assets/images/profile.png
+    - assets/images/seen.png
+    - assets/images/camera.png
+    - assets/images/add.png
+    - assets/images/audio.png
+    - assets/images/cam.png
 
 
   # To add assets to your application, add an assets section, like this:

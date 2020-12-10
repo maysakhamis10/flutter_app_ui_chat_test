@@ -10,7 +10,7 @@ class ChatBubble extends CustomPainter {
   });
 
   var _radius = 10.0;
-  var _x = 10.0;
+  var _x = 5.0;
 
 
   @override
@@ -30,7 +30,7 @@ class ChatBubble extends CustomPainter {
             ..color = this.color
             ..style = PaintingStyle.fill);
       var path = new Path();
-      path.moveTo(size.width - _x, size.height - 10);
+      path.moveTo(size.width - _x, size.height - 5);
       path.lineTo(size.width - _x, size.height);
       path.lineTo(size.width, size.height);
       canvas.clipPath(path);
@@ -62,7 +62,7 @@ class ChatBubble extends CustomPainter {
       var path = new Path();
       path.moveTo(0, size.height);
       path.lineTo(_x, size.height);
-      path.lineTo(_x, size.height - 20);
+      path.lineTo(_x, size.height - 5);
       canvas.clipPath(path);
       canvas.drawRRect(
           RRect.fromLTRBAndCorners(

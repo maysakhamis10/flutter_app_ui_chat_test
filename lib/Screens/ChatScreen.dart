@@ -2,7 +2,7 @@ import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app_ui_chat/Utils/Message.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 class MyChatScreen extends StatefulWidget {
@@ -23,7 +23,7 @@ class _MyChatState extends State<MyChatScreen> {
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     DateTime time = DateTime.now();
-    String formattedDate = DateFormat('yyyy-MM-dd hh:mm').format(time);
+    String formattedDate = DateFormat('hh:mm').format(time);
     return  Scaffold(
       appBar: AppBar(
         actions: [
@@ -46,56 +46,7 @@ class _MyChatState extends State<MyChatScreen> {
                     ),
                   ),
                   new Divider(height: 1.0),
-                  new Container(
-                      decoration:
-                          new BoxDecoration(color: Theme.of(context).cardColor),
-                      child: new IconTheme(
-                          data: new IconThemeData(
-                              color: Theme.of(context).accentColor),
-                          child: new Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 2.0),
-                            child: new Row(
-                              children: <Widget>[
-                                //left send button
-                                new Container(
-                                  width: 48.0,
-                                  height: 48.0,
-                                  child: new IconButton(
-                                      icon: Image.asset(
-                                          "assets/images/send_in.png"),
-                                      onPressed: () => _sendMsg(
-                                          _textController.text,
-                                          'left',
-                                          formattedDate)),
-                                ),
-
-                                //Enter Text message here
-                                new Flexible(
-                                  child: new TextField(
-                                    controller: _textController,
-                                    decoration: new InputDecoration.collapsed(
-                                        hintText: "Enter message"),
-                                  ),
-                                ),
-
-                                //right send button
-
-                                new Container(
-                                  margin:
-                                      new EdgeInsets.symmetric(horizontal: 2.0),
-                                  width: 48.0,
-                                  height: 48.0,
-                                  child: new IconButton(
-                                      icon: Image.asset(
-                                          "assets/images/send_out.png"),
-                                      onPressed: () => _sendMsg(
-                                          _textController.text,
-                                          'right',
-                                          formattedDate)),
-                                ),
-                              ],
-                            ),
-                          ))),
+                  buildBottomBar(formattedDate),
                 ],
               ),
             )));
@@ -103,12 +54,7 @@ class _MyChatState extends State<MyChatScreen> {
 
   void _sendMsg(String msg, String messageDirection, String date) {
     if (msg.length == 0) {
-      Fluttertoast.showToast(
-          msg: "Please Enter Message",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIos: 1,
-          backgroundColor: Colors.blue);
+    print('do anything');
     } else {
       _textController.clear();
       Message message = new Message(
@@ -157,7 +103,9 @@ class _MyChatState extends State<MyChatScreen> {
             IconButton(
               icon: Image.asset('assets/images/greenbtn.png'),
               //iconSize: 50,
-              onPressed: () {},
+              onPressed: () {
+                //change color of bottom bar
+              },
             ),
             IconButton(
               icon: Image.asset('assets/images/btnmoney.png'),
@@ -169,4 +117,82 @@ class _MyChatState extends State<MyChatScreen> {
         ),
     );
   }
+
+
+  Widget buildBottomBar(String formattedDate) {
+    return Container(
+        decoration: BoxDecoration(color: Colors.white),
+        child: IconTheme(
+            data: IconThemeData(color: Theme
+                .of(context)
+                .accentColor),
+            child: Container(
+              // padding: EdgeInsets.all(10.0),
+              child: Row(
+                children: <Widget>[
+                  GestureDetector(
+                        onTap: () => print('hello'),
+                        child: Container(
+                          child:   IconButton(
+                            icon: Image.asset('assets/images/add.png',width: 20,height: 20,),
+                            onPressed: () {},
+                          ),
+                        ),
+                      ),
+                  Container(
+                       margin:EdgeInsets.all(5.0),
+                        width: width*0.7,
+                        decoration: new BoxDecoration (
+                          border: Border.all(color: Colors.black38),
+                            borderRadius:  BorderRadius.all(Radius.circular(20.0)),
+                            color: Colors.white
+                        ),
+                       child :
+                       Container(
+                         padding: EdgeInsets.all(2.0),
+                         child: Row(
+                           children: [
+                             Flexible(
+                               child :TextField(
+                                 controller: _textController,
+                                 decoration: new InputDecoration.collapsed(
+                                     hintText: ""),
+                               ),
+                             ),
+                             IconButton(
+                               icon: Image.asset('assets/images/cam.png',width: 20,height: 20,),
+                               onPressed: () {},
+                             ),
+                           ],
+                         ),
+                       ),
+                      ),
+                  Container(
+                    //margin: EdgeInsets.only(left :10.0),
+                    child: new IconButton(
+                        icon: Image.asset(
+                            "assets/images/send.png"),
+                        onPressed: () =>
+                            _sendMsg(
+                                _textController.text,
+                                'left',
+                                formattedDate)),
+                  ),
+                ],
+              ),
+            )));
+
+
+  }
+  Widget sendAttach(){
+    return Row(
+      children: [
+        Icon(Icons.record_voice_over_sharp,),
+        Icon(Icons.camera,)
+      ],
+    );
+  }
+
+
+
 }
