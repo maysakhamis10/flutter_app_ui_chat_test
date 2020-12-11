@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app_ui_chat/Screens/CustomAudioMessages.dart';
 import 'package:flutter_app_ui_chat/Screens/bubble_layout.dart';
 
+import 'AppColors.dart';
+
 class Message extends StatelessWidget {
 
-  Message({this.msg, this.direction, this.dateTime,this.filePath, this.isAttach , this.isAudio});
+  Message({this.msg, this.direction, this.dateTime,this.filePath, this.isAttach , this.isAudio, this.isMoney});
 
   final String msg;
   final String filePath;
@@ -14,6 +16,7 @@ class Message extends StatelessWidget {
   final String dateTime;
   final bool  isAttach;
   final bool  isAudio;
+  final bool  isMoney;
   var width  ;
 
   @override
@@ -22,9 +25,10 @@ class Message extends StatelessWidget {
     return  Container(
         margin: const EdgeInsets.symmetric(vertical: 10.0),
         child: direction == 'left' ?
-            isAudio? MessagesCustomAudio(url: filePath, time:'') :
+            isAudio ?
+            MessagesCustomAudio(url: filePath, time:'') :
         buildBubbleMessage(
-            Alignment.bottomLeft, msg, Color(0xff25A3FF), Colors.white, true,
+            Alignment.bottomLeft, msg, BLUE, Colors.white, true,
             context) :
         buildBubbleMessage(
             Alignment.topRight, msg, Colors.white, Colors.black, false, context)
@@ -43,20 +47,20 @@ class Message extends StatelessWidget {
             child:
             isAttach ? Container(
               child: Image.file(File(filePath)),
-              margin: EdgeInsets.all(10.0),
+              margin: EdgeInsets.all(5.0),
             ): CustomPaint(
-              painter: ChatBubble(color: cardColor, alignment: alignment),
+              painter: ChatBubble(color: isMoney ? GREEN : cardColor, alignment: alignment),
               child: Container(
-                margin: EdgeInsets.all(10),
+                margin: EdgeInsets.all(5),
                 child: Stack(
                   children: <Widget>[
                     Container(
                       margin: isLeft ? EdgeInsets.only(left: 5.0) : EdgeInsets
                           .only(right: 5.0),
                       decoration: new BoxDecoration(
-                        color: cardColor,
+                        color: isMoney ? GREEN :cardColor ,
                         border: new Border.all(
-                            color: cardColor,
+                            color: isMoney ? GREEN :cardColor ,
                             width: .25,
                             style: BorderStyle.solid),
                         borderRadius: BorderRadius.only(
@@ -67,45 +71,45 @@ class Message extends StatelessWidget {
                         ),
                       ),
                       alignment: Alignment.bottomLeft,
-                      padding: const EdgeInsets.all(10.0),
+                      padding: const EdgeInsets.all(5.0),
                       child: new Text(
                         msg,
                         style: new TextStyle(
                           fontFamily: 'Gamja Flower',
                           fontSize: 20.0,
-                          color: textColor,
+                          color: isMoney ? Colors.white : textColor,
                         ),
                       ),
 
-                      width:width * 0.60,
+                      width:isMoney ? width * 0.40 :width * 0.60,
                     ),
                   ],
                 ),
               ),
             ),
           ),
-          Container(
-          alignment: isLeft? Alignment.topLeft : Alignment.topRight,
-          margin: isLeft? EdgeInsets.only(top: 4.0,left: width*0.5) : EdgeInsets.only(top: 4.0,right: 4.0),
+          isMoney || isAttach ? Container() : Container(
+            alignment: isLeft? Alignment.topLeft : Alignment.topRight,
+            margin: isLeft? EdgeInsets.only(top: 4.0,left: width*0.5) : EdgeInsets.only(top: 4.0,right: 4.0),
             child: ConstrainedBox(
-                constraints: BoxConstraints(minWidth: 40),
-                child: IntrinsicWidth(
-                  child:
-                 Row(
-                   children: [
-                     Text(
-                       dateTime,
-                       style: new TextStyle(
-                         fontSize: 8.0,
-                         color: Colors.white,
-                       ),
-                     ),
-                     SizedBox(height: 5.0,),
-                     Image.asset('assets/images/seen.png'),
+              constraints: BoxConstraints(minWidth: 40),
+              child: IntrinsicWidth(
+                child:
+                Row(
+                  children: [
+                    Text(
+                      dateTime,
+                      style: new TextStyle(
+                        fontSize: 8.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 5.0,),
+                    Image.asset('assets/images/seen.png'),
 
-                   ],
-                 ),
+                  ],
                 ),
+              ),
             ),
           ),
         ],

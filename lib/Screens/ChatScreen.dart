@@ -1,13 +1,16 @@
 import 'dart:io';
-
+import 'package:file/local.dart';
 import 'package:audio_recorder/audio_recorder.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app_ui_chat/Utils/AppColors.dart';
 import 'package:flutter_app_ui_chat/Utils/Message.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import 'TakeAPicutre.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 class MyChatScreen extends StatefulWidget {
 
@@ -23,9 +26,11 @@ class _MyChatState extends State<MyChatScreen> {
   final List<Message> _messages = <Message>[];
   var width ,height;
   final _textController = TextEditingController();
-  bool isSendMoney = false ;
+  bool _isSendMoney = false ;
   BehaviorSubject<bool> streamControllerForRecording = BehaviorSubject<bool>();
   Recording _recording = new Recording();
+  LocalFileSystem localFileSystem;
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +47,7 @@ class _MyChatState extends State<MyChatScreen> {
         body:  Container(
             width: double.infinity,
             height: double.infinity,
-            color: Color(0xff11386B),
+            color: DARK_BLUE,
             child: new Container(
               child: new Column(
                 children: <Widget>[
@@ -68,7 +73,9 @@ class _MyChatState extends State<MyChatScreen> {
 
   void _sendMsg(String msg, String messageDirection, String date ,
       bool isAttach , String attachPath , bool isAudio) {
-    if(msg.length==0&& attachPath.length==0){
+    
+    
+    if(msg.length==0 && attachPath.length==0){
       print('do anything');
     }
     else {
@@ -80,22 +87,25 @@ class _MyChatState extends State<MyChatScreen> {
         dateTime: date,
         isAttach: isAttach,
         isAudio: isAudio ,
+        isMoney: _isSendMoney,
       );
       setState(() {
         _messages.insert(0, message);
-        isSendMoney = false;
+        _isSendMoney = false;
       });
     }
   }
 
   @override
   void initState() {
+    localFileSystem = localFileSystem ?? LocalFileSystem();
+    checkPermissionStatus();
     super.initState();
   }
 
   @override
   void dispose() {
-    _textController.dispose();
+    streamControllerForRecording.close();
     super.dispose();
   }
 
@@ -121,11 +131,11 @@ class _MyChatState extends State<MyChatScreen> {
             ),
             Text("Gbemiosla Adegbite" , style: TextStyle(color: Colors.black),),
             IconButton(
-              icon: isSendMoney ?  Image.asset('assets/images/greenbtn.png')  : Image.asset('assets/images/greybtn.png'),
+              icon: _isSendMoney ?  Image.asset('assets/images/greenbtn.png')  : Image.asset('assets/images/greybtn.png'),
               onPressed: () {
                 //change color of bottom bar
                 setState(() {
-                  isSendMoney = true ;
+                  _isSendMoney = true ;
                 });
 
               },
@@ -143,137 +153,166 @@ class _MyChatState extends State<MyChatScreen> {
 
 
   Widget buildBottomBar(String formattedDate) {
-    return Center(
+    return  Align(
+      alignment: Alignment.center,
       child: Container(
-          decoration: BoxDecoration(color: Colors.white),
-          child: IconTheme(
-              data: IconThemeData(color: Theme.of(context).accentColor),
-              child: Container(
-                child: Row(
-                  children: <Widget>[
-                    // GestureDetector(
-                    //   onTap: () => print('hello'),
-                    //   child: Container(
-                    //     child:   IconButton(
-                    //       icon: Image.asset('assets/images/add.png',width: 20,height: 20,),
-                    //       onPressed: () {
-                    //         _sendMsg(
-                    //             _textController.text,
-                    //             'right',
-                    //             formattedDate);
-                    //       },
-                    //     ),
-                    //   ),
-                    // ),
-                    Container(
-                    //  margin:EdgeInsets.all(5.0),
-                      width: width*0.6,
-                      height: 40,
-                      decoration: new BoxDecoration (
-                          border: Border.all(color: Colors.black38),
-                          borderRadius:  BorderRadius.all(Radius.circular(20.0)),
-                          color: isSendMoney ? Colors.green : Colors.white
-                      ),
-                      child :
-                      Container(
-                        padding: EdgeInsets.only(left: 10.0),
-                        child: Row(
-                          children: [
-                            Flexible(
-                              child :TextField(
-                                style: TextStyle(color: isSendMoney ? Colors.white : Colors.grey),
-                                controller: _textController,
-                                decoration: new InputDecoration.collapsed(hintText: ""),
-                              ),
-                            ),
-                            IconButton(
-                              icon: Image.asset('assets/images/cam.png',width: 30,height: 30,),
-                              onPressed: () {},
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Container(
-                      child: new IconButton(
-                          icon: Image.asset(
-                              "assets/images/send.png",),
-                          onPressed: () =>
-                              _sendMsg(
-                                  _textController.text,
-                                  'left',
-                                  formattedDate , false , '', false)),
-                    ),
-                    Container(
-                      child: new IconButton(
-                          icon: Image.asset(
-                              "assets/images/camera.png",),
-                          onPressed: ()async {
-                            var firstCamera = await getCamera();
-                            String imagePath = await Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                                  return TakeAPicture(
-                                    camera: firstCamera,
-                                  );
-                                }));
-                            _sendMsg('','left',formattedDate,true , imagePath , false);
-                          }
-                      ),
-                    ),
-                    Container(
-                      child:
-                    Row(
-                      children: [
-                        StreamBuilder<bool>(
-                          stream: streamControllerForRecording.stream,
-                          initialData: false,
-                          builder: (context, snap) {
-                            return Visibility(
-                              visible: !snap.data,
-                              child: IconButton(
-                                onPressed:() {
-                                  start();
-                                },
-                                icon: Image.asset(
-                                  "assets/images/audio.png",),
-                              ),
-                            );
-                          },
-                        ),
-                        StreamBuilder<bool>(
-                            stream: streamControllerForRecording.stream,
-                            initialData: false,
-                            builder: (context, snap) {
-                              return Visibility(
-                                visible: snap.data,
-                                child: IconButton(
-                                  onPressed:() {
-                                    getFileAndShowIt();
-                                  },
-                                  icon: Icon(
-                                      Icons.pause
-                                  ),
-                                ),
-                              );
-                            })
-                      ],
-                    )
-                    ),
-                  ],
-                ),
-              ))),
+        decoration: BoxDecoration(color: Colors.white),
+            child: Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  buildAddButton(formattedDate),
+                  buildMessageField(),
+                  buildSendButton(formattedDate),
+                  // buildCameraButton(),
+                  // buildAudioButton()
+
+                ],
+              ),
+            ),
+    ),
+    );
+  }
+  Widget buildAddButton(var formattedDate){
+    return
+    GestureDetector(
+      onTap: () => print('hello'),
+      child: Container(
+        child:   IconButton(
+          icon: Image.asset('assets/images/add.png',width: 20,height: 20,),
+          onPressed: () {
+            _sendMsg(
+
+                _isSendMoney ? 'N ${_textController.text}': _textController.text,
+                'right',
+                formattedDate , false , '', false);
+          },
+        ),
+      ),
     );
   }
 
 
+  Widget buildMessageField(){
+    return  Container(
+      //  margin:EdgeInsets.all(5.0),
+      width: width*0.7,
+      height: 35,
+      decoration: new BoxDecoration (
+          border: Border.all(color: GREY),
+          borderRadius:  BorderRadius.all(Radius.circular(20.0)),
+          color: _isSendMoney ? GREEN : Colors.white
+      ),
+      child :
+      Container(
+        padding: EdgeInsets.only(left: 10.0),
+        child: Row(
+          children: [
+            Flexible(
+              child :TextField(
+                keyboardType: _isSendMoney ? TextInputType.number : TextInputType.text,
+                style: TextStyle(color: _isSendMoney ? Colors.white : Colors.grey),
+                controller: _textController,
+                decoration: new InputDecoration.collapsed(hintText: ""),
+              ),
+            ),
+            IconButton(
+              icon: Image.asset(_isSendMoney ? 'assets/images/isMoney.png' :
+              'assets/images/cam.png',width: 30,height: 30,),
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  
+  Widget buildSendButton(var formattedDate){
+    return Container(
+      child: new IconButton(
+          icon: Image.asset(
+            "assets/images/send.png",),
+          onPressed: () =>
+              _sendMsg(
+                  _isSendMoney ? 'N ${_textController.text}': _textController.text,
+                  'left',
+                  formattedDate , false , '', false)),
+    );
+  }
+
+  Widget buildCameraButton(){
+    return  Container(
+      child: new IconButton(
+          icon: Image.asset(
+            "assets/images/camera.png",),
+          onPressed: ()async {
+            var firstCamera = await getCamera();
+            String imagePath = await Navigator.push(context,
+                MaterialPageRoute(builder: (context) {
+                  return TakeAPicture(
+                    camera: firstCamera,
+                  );
+                }));
+            _sendMsg('','left','',true , imagePath , false);
+          }
+      ),
+    );
+  }
+  Widget buildAudioButton(){
+    return  Container(
+        child:
+        Row(
+          children: [
+            StreamBuilder<bool>(
+              stream: streamControllerForRecording.stream,
+              initialData: false,
+              builder: (context, snap) {
+                return Visibility(
+                  visible: !snap.data,
+                  child: IconButton(
+                    onPressed:() {
+                      start();
+                    },
+                    icon: Image.asset(
+                      "assets/images/audio.png",),
+                  ),
+                );
+              },
+            ),
+            StreamBuilder<bool>(
+                stream: streamControllerForRecording.stream,
+                initialData: false,
+                builder: (context, snap) {
+                  return Visibility(
+                    visible: snap.data,
+                    child: IconButton(
+                      onPressed:() {
+                        getFileAndShowIt();
+                      },
+                      icon: Icon(
+                          Icons.pause
+                      ),
+                    ),
+                  );
+                })
+          ],
+        )
+    );
+  }
+
   start() async {
     try {
       if (await AudioRecorder.hasPermissions) {
+
         await AudioRecorder.start();
         bool isRecording = await AudioRecorder.isRecording;
         if (!streamControllerForRecording.isClosed)
           streamControllerForRecording.sink.add(isRecording);
-        _recording = new Recording(duration: new Duration(), path: "");
+        setState(() {
+          _recording = new Recording(duration: new Duration(), path: "");
+          isRecording = isRecording;
+        });
       } else {
         print("doesn't have permission");
       }
@@ -283,6 +322,7 @@ class _MyChatState extends State<MyChatScreen> {
   }
   getFileAndShowIt() async {
     String file = await stop();
+    print('new files $file');
     _sendMsg('','left', '' , false , file , true);
   }
 
@@ -290,7 +330,7 @@ class _MyChatState extends State<MyChatScreen> {
     var recording = await AudioRecorder.stop();
     print("Stop recording: ${recording.path}");
     bool isRecording = await AudioRecorder.isRecording;
-    File file = new File(recording.path);
+    File file = localFileSystem.file(recording.path);
     print("  File length: ${await file.length()}");
     if (!streamControllerForRecording.isClosed)
       streamControllerForRecording.sink.add(isRecording);
@@ -306,6 +346,20 @@ class _MyChatState extends State<MyChatScreen> {
     final firstCamera = cameras.first;
 
     return firstCamera;
+  }
+
+  Future<void> checkPermissionStatus() async {
+    if (await Permission.camera.request().isGranted) {
+      // Either the permission was already granted before or the user just granted it.
+    }
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+      Permission.microphone,
+      Permission.storage
+    ].request();
+    print(statuses[
+      Permission.microphone
+    ]);
   }
 
 

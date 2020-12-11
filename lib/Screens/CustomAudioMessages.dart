@@ -48,10 +48,10 @@ class MessagesCustomAudioState extends State<MessagesCustomAudio> {
               minWidth: DIMEN_230,
               maxWidth: DIMEN_280,
             ),
-            margin: EdgeInsets.all(DIMEN_10),
+            padding: EdgeInsets.all(DIMEN_5),
             decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                borderRadius: BorderRadius.all(Radius.circular(10.0))),
             child: FittedBox(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -62,12 +62,15 @@ class MessagesCustomAudioState extends State<MessagesCustomAudio> {
                       icon: !_isPlaying
                           ? Icon(
                               Icons.play_arrow,
-                              color: Colors.blue,
+                              color: BLUE,
+                        size: 40,
                             )
                           : Icon(
                               Icons.pause,
-                              color: Colors.blue,
-                            ),
+                              color: BLUE,
+                        size: 40,
+
+                      ),
                       onPressed: () {
                         !_isPlaying && position.inMilliseconds == 0
                             ? audioPlayer
@@ -87,43 +90,55 @@ class MessagesCustomAudioState extends State<MessagesCustomAudio> {
                                     setState(() {});
                                   });
                       }),
-                  Slider(
-                      activeColor: WHITE,
-                      inactiveColor: WHITE,
-                      value: position?.inMilliseconds?.toDouble() ?? 0.0,
-                      onChanged: (double value) {
-                        return audioPlayer
-                            .seek(Duration(milliseconds: value.floor()));
-                      },
-                      min: 0.0,
-                      max: duration.inMilliseconds.toDouble()),
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                      activeTrackColor: BLUE,
+                      inactiveTrackColor: GREY,
+                      trackShape: RectangularSliderTrackShape(),
+                      trackHeight: 4.0,
+                      thumbColor: BLUE,
+                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 10.0),
+                      overlayColor: Colors.red.withAlpha(32),
+                      overlayShape: RoundSliderOverlayShape(overlayRadius: 30.0),
+                    ),
+                    child: Container(
+                      margin: EdgeInsets.only(top : 10.0),
+                      width: MediaQuery.of(context).size.width*0.8,
+                      child: Slider(
+                        activeColor: BLUE,
+                        inactiveColor:GREY,
+                        min: 0.0,
+                        max: duration.inMilliseconds.toDouble(),
+                        value: position?.inMilliseconds?.toDouble() ?? 0.0,
+                        onChanged: (double value) {
+                          return audioPlayer.seek(Duration(milliseconds: value.floor()));
+                        },
+                      ),
+                    ),
+                  ),
                   Container(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        IconButton(
-                            padding: EdgeInsets.all(0.0),
-                            iconSize: 0.0,
-                            enableFeedback: false,
-                            icon:Icon(
-                              Icons.headset,
-                              color: Colors.blue,
-                            ),
-                            onPressed: () {
-                            }),
+                       Container(
+                         margin: EdgeInsets.only(top : 10.0),
+                         child:  IconButton(
+                           enableFeedback: false,
+                           icon:Icon(
+                             Icons.headset,
+                             color: GREEN,
+                             size: 40,
+                           ),
+                           onPressed: () {
+                           }),
+                       ),
                         Text(
                           "${duration.inMinutes.remainder(60)}:${(duration.inSeconds.remainder(60))}",
                           style: WHITE_HEAVY_SMALL,
                         )
                       ],
                     ),
-                    decoration: BoxDecoration(
-                        color: Colors.pinkAccent,
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(DIMEN_8),
-                            topLeft: Radius.circular(DIMEN_8),
-                            bottomRight: Radius.circular(DIMEN_8))),
                   ),
                 ],
               ),
