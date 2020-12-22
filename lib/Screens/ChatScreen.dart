@@ -8,6 +8,8 @@ import 'package:flutter_app_ui_chat/Utils/AppColors.dart';
 import 'package:flutter_app_ui_chat/Utils/Message.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
+import '../Utils/AppColors.dart';
+import '../Utils/AppColors.dart';
 import 'TakeAPicutre.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -26,7 +28,7 @@ class _MyChatState extends State<MyChatScreen> {
   final List<Message> _messages = <Message>[];
   var width ,height;
   final _textController = TextEditingController();
-  bool _isSendMoney = false ;
+  bool  _isSendMoney = false ;
   BehaviorSubject<bool> streamControllerForRecording = BehaviorSubject<bool>();
   Recording _recording = new Recording();
   LocalFileSystem localFileSystem;
@@ -57,8 +59,12 @@ class _MyChatState extends State<MyChatScreen> {
 
                 ],
               ),
-            )));
+            ))
+
+
+    );
   }
+
 
   Widget buildListOfMessages(){
     return Flexible(
@@ -110,6 +116,7 @@ class _MyChatState extends State<MyChatScreen> {
   }
 
 
+
   Widget buildAppABar(){
     return Container(
       color: Colors.white,
@@ -135,7 +142,12 @@ class _MyChatState extends State<MyChatScreen> {
               onPressed: () {
                 //change color of bottom bar
                 setState(() {
-                  _isSendMoney = true ;
+                  if(_isSendMoney){
+                    _isSendMoney = false ;
+                  }
+                  else{
+                    _isSendMoney = true ;
+                  }
                 });
 
               },
@@ -173,6 +185,7 @@ class _MyChatState extends State<MyChatScreen> {
     ),
     );
   }
+
   Widget buildAddButton(var formattedDate){
     return
     GestureDetector(
@@ -226,8 +239,8 @@ class _MyChatState extends State<MyChatScreen> {
       ),
     );
   }
-  
-  
+
+
   Widget buildSendButton(var formattedDate){
     return Container(
       child: new IconButton(
@@ -259,6 +272,7 @@ class _MyChatState extends State<MyChatScreen> {
       ),
     );
   }
+
   Widget buildAudioButton(){
     return  Container(
         child:
@@ -320,6 +334,7 @@ class _MyChatState extends State<MyChatScreen> {
       print(e);
     }
   }
+
   getFileAndShowIt() async {
     String file = await stop();
     print('new files $file');
