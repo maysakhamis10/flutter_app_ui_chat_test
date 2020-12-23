@@ -4,8 +4,11 @@ import 'package:audio_recorder/audio_recorder.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app_ui_chat/Utils/AppColors.dart';
 import 'package:flutter_app_ui_chat/Utils/Message.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_screenutil/screenutil_init.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import '../Utils/AppColors.dart';
@@ -33,36 +36,33 @@ class _MyChatState extends State<MyChatScreen> {
   Recording _recording = new Recording();
   LocalFileSystem localFileSystem;
 
-
   @override
   Widget build(BuildContext context) {
-    width = MediaQuery.of(context).size.width;
-    height= MediaQuery.of(context).size.height;
+    width = ScreenUtil().screenWidth ;
+    height = ScreenUtil().screenHeight;
     DateTime time = DateTime.now();
     String formattedDate = DateFormat('hh:mm').format(time);
-    return  Scaffold(
-      appBar: AppBar(
-        actions: [
-          buildAppABar()
-        ],
-      ),
-        body:  Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: DARK_BLUE,
-            child: new Container(
-              child: new Column(
-                children: <Widget>[
-                  buildListOfMessages(),
-                  new Divider(height: 1.0),
-                  buildBottomBar(formattedDate),
+    return Scaffold(
+            appBar: AppBar(
+              actions: [
+                buildAppABar()
+              ],
+            ),
+            body: Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: DARK_BLUE,
+                child: new Container(
+                  child: new Column(
+                    children: <Widget>[
+                      buildListOfMessages(),
+                      new Divider(height: 1.0),
+                      buildBottomBar(formattedDate),
 
-                ],
-              ),
-            ))
-
-
-    );
+                    ],
+                  ),
+                ))
+        );
   }
 
 
@@ -104,10 +104,20 @@ class _MyChatState extends State<MyChatScreen> {
 
   @override
   void initState() {
+
     localFileSystem = localFileSystem ?? LocalFileSystem();
     checkPermissionStatus();
     super.initState();
   }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+
+  }
+
+
 
   @override
   void dispose() {
@@ -118,71 +128,70 @@ class _MyChatState extends State<MyChatScreen> {
 
 
   Widget buildAppABar(){
-    return Container(
-      color: Colors.white,
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.all(10.0),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            IconButton(
-              icon: Image.asset('assets/images/backbtn.png'),
-              //iconSize: 50,
-              onPressed: () {
+    return
 
-              },
-            ),
-            CircleAvatar(
-                radius: 20,
-                backgroundImage: AssetImage('assets/images/profile.png')
-            ),
-            Text("Gbemiosla Adegbite" , style: TextStyle(color: Colors.black),),
-            IconButton(
-              icon: _isSendMoney ?  Image.asset('assets/images/greenbtn.png')  : Image.asset('assets/images/greybtn.png'),
-              onPressed: () {
-                //change color of bottom bar
-                setState(() {
-                  if(_isSendMoney){
-                    _isSendMoney = false ;
-                  }
-                  else{
-                    _isSendMoney = true ;
-                  }
-                });
 
-              },
-            ),
-            IconButton(
-              icon: Image.asset('assets/images/btnmoney.png'),
-             // iconSize: 50,
-              onPressed: () {},
-            )
+     Center(
+       child:  Container(
+         width: ScreenUtil().screenWidth ,
+         color: Colors.white,
+         // padding: EdgeInsets.all(10.0),
+         child:  Row(
+           mainAxisAlignment: MainAxisAlignment.spaceAround,
+           children: [
+             Image(
+               height: ScreenUtil().setHeight(14),
+               width: ScreenUtil().setWidth(8),
+               image:  AssetImage('assets/images/backbtn.png'),
+             ),
+             CircleAvatar(
+                 radius: 20,
+                 backgroundImage: AssetImage('assets/images/profile.png',
+                 )
+             ),
+             Text("Gbemiosla Adegbite" , style: TextStyle(color: Colors.black),),
+             IconButton(
+               icon: _isSendMoney ?  Image.asset('assets/images/greenbtn.png')  : Image.asset('assets/images/greybtn.png'),
+               onPressed: () {
+                 //change color of bottom bar
+                 setState(() {
+                   if(_isSendMoney){
+                     _isSendMoney = false ;
+                   }
+                   else{
+                     _isSendMoney = true ;
+                   }
+                 });
 
-          ],
-        ),
-    );
+               },
+             ),
+             IconButton(
+               icon: Image.asset('assets/images/btnmoney.png'),
+               onPressed: () {},
+             )
+           ],
+
+         ),
+
+       ),
+     );
   }
 
 
   Widget buildBottomBar(String formattedDate) {
-    return  Align(
-      alignment: Alignment.center,
+    return Container(
+      decoration: BoxDecoration(color: Colors.white),
       child: Container(
-        decoration: BoxDecoration(color: Colors.white),
-            child: Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  buildAddButton(formattedDate),
-                  buildMessageField(),
-                  buildSendButton(formattedDate),
-                  // buildCameraButton(),
-                  // buildAudioButton()
+        child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    buildMessageField(),
+                    buildSendButton(formattedDate),
+                    buildAudioButton()
+                  ],
+                ),
 
-                ],
-              ),
             ),
-    ),
     );
   }
 
@@ -192,7 +201,7 @@ class _MyChatState extends State<MyChatScreen> {
       onTap: () => print('hello'),
       child: Container(
         child:   IconButton(
-          icon: Image.asset('assets/images/add.png',width: 20,height: 20,),
+          icon: Image.asset('assets/images/add.png',width: ScreenUtil().setWidth(20),height: ScreenUtil().setHeight(20),),
           onPressed: () {
             _sendMsg(
 
@@ -208,9 +217,9 @@ class _MyChatState extends State<MyChatScreen> {
 
   Widget buildMessageField(){
     return  Container(
-      //  margin:EdgeInsets.all(5.0),
+      margin:EdgeInsets.all(5.0),
       width: width*0.7,
-      height: 35,
+      height: ScreenUtil().setHeight(40),
       decoration: new BoxDecoration (
           border: Border.all(color: GREY),
           borderRadius:  BorderRadius.all(Radius.circular(20.0)),
@@ -218,12 +227,18 @@ class _MyChatState extends State<MyChatScreen> {
       ),
       child :
       Container(
-        padding: EdgeInsets.only(left: 10.0),
+        padding: EdgeInsets.only(left: 2.0),
         child: Row(
           children: [
             Flexible(
               child :TextField(
-                keyboardType: _isSendMoney ? TextInputType.number : TextInputType.text,
+                keyboardType: TextInputType.text,
+                inputFormatters: _isSendMoney ?
+                <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                ]:<TextInputFormatter>[
+                  FilteringTextInputFormatter.allow( RegExp("[a-zA-Z]")),
+                ],
                 style: TextStyle(color: _isSendMoney ? Colors.white : Colors.grey),
                 controller: _textController,
                 decoration: new InputDecoration.collapsed(hintText: ""),
@@ -231,8 +246,18 @@ class _MyChatState extends State<MyChatScreen> {
             ),
             IconButton(
               icon: Image.asset(_isSendMoney ? 'assets/images/isMoney.png' :
-              'assets/images/cam.png',width: 30,height: 30,),
-              onPressed: () {},
+              'assets/images/cam.png',width: ScreenUtil().setWidth(30),
+                height: ScreenUtil().setHeight(30),),
+              onPressed:() async {
+                var firstCamera = await getCamera();
+                String imagePath = await Navigator.push(context,
+                    MaterialPageRoute(builder: (context) {
+                      return TakeAPicture(
+                        camera: firstCamera,
+                      );
+                    }));
+                _sendMsg('','left','',true , imagePath , false);
+              }
             ),
           ],
         ),
@@ -243,6 +268,7 @@ class _MyChatState extends State<MyChatScreen> {
 
   Widget buildSendButton(var formattedDate){
     return Container(
+     // padding: EdgeInsets.all(2),
       child: new IconButton(
           icon: Image.asset(
             "assets/images/send.png",),
@@ -275,6 +301,7 @@ class _MyChatState extends State<MyChatScreen> {
 
   Widget buildAudioButton(){
     return  Container(
+      ///padding: EdgeInsets.all(2),
         child:
         Row(
           children: [

@@ -1,10 +1,14 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/screenutil_init.dart';
 import 'Screens/ChatScreen.dart';
 import 'Utils/AppColors.dart';
 
 main() {
-  runApp(new MaterialApp(
+  runApp(new
+
+
+  MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: new ThemeData(
       accentColor: DARK_BLUE,
@@ -12,7 +16,9 @@ main() {
       primaryColorDark: Colors.white,
       fontFamily: 'Gamja Flower',
     ),
-    home: new MyChatScreen(),
+    home: ScreenUtilInit(
+        allowFontScaling: false,
+      child: MyChatScreen(),)
   ));
 }
 
