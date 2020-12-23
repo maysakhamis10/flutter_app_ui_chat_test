@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app_ui_chat/Utils/AppColors.dart';
 import 'package:flutter_app_ui_chat/Utils/Message.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_screenutil/screenutil_init.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import '../Utils/AppColors.dart';
@@ -40,6 +39,7 @@ class _MyChatState extends State<MyChatScreen> {
   Widget build(BuildContext context) {
     width = ScreenUtil().screenWidth ;
     height = ScreenUtil().screenHeight;
+
     DateTime time = DateTime.now();
     String formattedDate = DateFormat('hh:mm').format(time);
     return Scaffold(
@@ -129,75 +129,73 @@ class _MyChatState extends State<MyChatScreen> {
 
   Widget buildAppABar(){
     return
+    Container(
+      width: ScreenUtil().screenWidth ,
+      color: Colors.white,
+      // padding: EdgeInsets.all(10.0),
+      child:  Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Image(
+            height: ScreenUtil().setHeight(14),
+            width: ScreenUtil().setWidth(8),
+            image:  AssetImage('assets/images/backbtn.png'),
+          ),
+          CircleAvatar(
+              radius: 20,
+              backgroundImage: AssetImage('assets/images/profile.png',
+              )
+          ),
+           Align(child:  Text("Gbemiosla Adegbite" , style: TextStyle(color: Colors.black),),
+             alignment: Alignment.center,),
+          IconButton(
+            icon: _isSendMoney ?  Image.asset('assets/images/greenbtn.png')  : Image.asset('assets/images/greybtn.png'),
+            onPressed: () {
+              //change color of bottom bar
+              setState(() {
+                if(_isSendMoney){
+                  _isSendMoney = false ;
+                }
+                else{
+                  _isSendMoney = true ;
+                }
+              });
 
+            },
+          ),
+          IconButton(
+            icon: Image.asset('assets/images/btnmoney.png'),
+            onPressed: () {},
+          )
+        ],
 
-     Center(
-       child:  Container(
-         width: ScreenUtil().screenWidth ,
-         color: Colors.white,
-         // padding: EdgeInsets.all(10.0),
-         child:  Row(
-           mainAxisAlignment: MainAxisAlignment.spaceAround,
-           children: [
-             Image(
-               height: ScreenUtil().setHeight(14),
-               width: ScreenUtil().setWidth(8),
-               image:  AssetImage('assets/images/backbtn.png'),
-             ),
-             CircleAvatar(
-                 radius: 20,
-                 backgroundImage: AssetImage('assets/images/profile.png',
-                 )
-             ),
-             Text("Gbemiosla Adegbite" , style: TextStyle(color: Colors.black),),
-             IconButton(
-               icon: _isSendMoney ?  Image.asset('assets/images/greenbtn.png')  : Image.asset('assets/images/greybtn.png'),
-               onPressed: () {
-                 //change color of bottom bar
-                 setState(() {
-                   if(_isSendMoney){
-                     _isSendMoney = false ;
-                   }
-                   else{
-                     _isSendMoney = true ;
-                   }
-                 });
+      ),
 
-               },
-             ),
-             IconButton(
-               icon: Image.asset('assets/images/btnmoney.png'),
-               onPressed: () {},
-             )
-           ],
-
-         ),
-
-       ),
-     );
+    );
   }
 
 
   Widget buildBottomBar(String formattedDate) {
-    return Container(
-      decoration: BoxDecoration(color: Colors.white),
-      child: Container(
-        child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    buildMessageField(),
-                    buildSendButton(formattedDate),
-                    buildAudioButton()
-                  ],
-                ),
+    return   Container(
 
-            ),
+        decoration: BoxDecoration(color: Colors.white),
+        child: Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+            children: <Widget>[
+              buildMessageField(),
+              buildSendButton(formattedDate),
+              buildAudioButton()
+            ],
+          ),
+        ),
     );
   }
 
   Widget buildAddButton(var formattedDate){
-    return
-    GestureDetector(
+    return GestureDetector(
       onTap: () => print('hello'),
       child: Container(
         child:   IconButton(
