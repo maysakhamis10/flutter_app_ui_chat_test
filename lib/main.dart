@@ -2,6 +2,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screenutil_init.dart';
 import 'Screens/ChatScreen.dart';
+import 'Screens/home_page.dart';
 import 'Utils/AppColors.dart';
 
 main() {
@@ -18,7 +19,7 @@ main() {
     ),
     home: ScreenUtilInit(
         allowFontScaling: false,
-      child: MyChatScreen(),)
+      child: HomePage(),)
   ));
 }
 

@@ -135,7 +135,7 @@ class MessagesCustomAudioState extends State<MessagesCustomAudio> {
                        ),
                         Text(
                           "${duration.inMinutes.remainder(60)}:${(duration.inSeconds.remainder(60))}",
-                          style: WHITE_HEAVY_SMALL,
+                          // style: WHITE_HEAVY_SMALL,
                         )
                       ],
                     ),
@@ -154,7 +154,7 @@ class MessagesCustomAudioState extends State<MessagesCustomAudio> {
   }
 
   Text messageTime() {
-    return Text(widget.time ?? "Time", style: TIME_STYLE);
+    return Text(widget.time ?? "Time", /*style: TIME_STYLE*/);
   }
 
   @override

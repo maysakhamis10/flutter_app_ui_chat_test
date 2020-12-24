@@ -1,20 +1,34 @@
 import 'package:flutter/material.dart';
-import 'AppColors.dart';
-import 'Dimens.dart';
 
+import 'colors.dart';
 
+const titleTextStyle =
+TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black);
 
-const TextStyle TIME_STYLE = TextStyle(
-    color: BLUE,
-    fontWeight: FontWeight.normal,
-    fontFamily: "Roboto",
-    fontStyle: FontStyle.normal,
-    fontSize: DIMEN_14);
+const subTitleTextStyle = TextStyle(color: Colors.black);
 
-const TextStyle WHITE_HEAVY_SMALL = TextStyle(
-  fontSize: DIMEN_10,
-  color: BLUE,
-  fontFamily: 'Bold',
-  fontWeight: FontWeight.w700,
-);
+const inkWellTextStyle = TextStyle(color: blueColor);
 
+const SemiBoldTextStyle =
+TextStyle(fontFamily: 'OpenSansSemiBold', color: Colors.black);
+
+const WhiteTextStyle = TextStyle(color: Colors.white, fontSize: 16);
+
+const blueTitleTextStyle = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: blueColor,
+    fontFamily: 'openSansBold');
+
+const onBoardingDescriptionTextStyle =
+    TextStyle(fontSize: 16, color: Colors.blue);
+
+const phoneNumberTextStyle = TextStyle(fontSize: 14);
+
+const whiteBoldTextStyle =
+TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold);
+
+const errorTextStyle = TextStyle(color: Colors.red);
+
+const boldTextStyle = TextStyle(fontWeight: FontWeight.bold);
+const whiteSmallTextSTyle = TextStyle(color: Colors.white, fontSize: 12);
