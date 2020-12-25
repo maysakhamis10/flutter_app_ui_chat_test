@@ -15,6 +15,8 @@ import '../Utils/AppColors.dart';
 import 'TakeAPicutre.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'colors.dart';
+
 
 class MyChatScreen extends StatefulWidget {
 
@@ -67,7 +69,9 @@ class _MyChatState extends State<MyChatScreen> {
 
 
   Widget buildListOfMessages(){
-    return Flexible(
+    return
+
+      Flexible(
       child: new ListView.builder(
         padding: new EdgeInsets.all(8.0),
         reverse: true,
