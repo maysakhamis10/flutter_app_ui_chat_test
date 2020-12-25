@@ -92,85 +92,83 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: primaryColor));
     return Scaffold(
-      backgroundColor: whileColorBackground,
-      resizeToAvoidBottomPadding: false,
-      resizeToAvoidBottomInset: false,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-          child: Icon(
-            isOpened ? Icons.close : Icons.add,
-          ),
-          backgroundColor: primaryColor,
-          onPressed: () {
-            animate();
-          }),
-      bottomNavigationBar: getBottomAppBar(),
-      body: Stack(
-        alignment: Alignment.center,
-      children: [
-        Column(
+        backgroundColor: whileColorBackground,
+        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingActionButton(
+            child: Icon(
+              isOpened ? Icons.close : Icons.add,
+            ),
+            backgroundColor: primaryColor,
+            onPressed: () {
+              animate();
+            }),
+        bottomNavigationBar: getBottomAppBar(),
+        body: Stack(
+          alignment: Alignment.center,
           children: [
-            buildWhiteBar(),
-            buildBlueBarUi(),
-            Container(
-                height: ScreenUtil().screenHeight * 0.6,
-                child: getMessagesListWidget())
-          ],
-        ),
-        Visibility(
-          visible: isClicked ? false : true,
-          child:
-          Positioned(
-            top: isClicked ? 80 : 180,
-            child: Container(
-              height: 40,
-              // margin: EdgeInsets.only(left :20.0 , right: 20.0),
-              width: ScreenUtil().screenWidth*0.9,
-              child: Container(
-                margin: EdgeInsets.all(5.0),
-                child: TextFormField(
-                  enabled: true,
-                  decoration: InputDecoration(
-                      hintText: 'Search for a contact',
-                      border: InputBorder.none,
-                      fillColor: Colors.white,
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: () {
-                          setState(() {
-                            if (isClicked) {
-                              isClicked = false;
-                            }
-                            else {
-                              isClicked = true;
-                            }
-                          });
-                        },)),
-                ),
-              ),
-              decoration: BoxDecoration(
-                color: whiteColor,
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.4),
-                    spreadRadius: 5,
-                    blurRadius: 7,
-                    offset: Offset(0, 3), // changes position of shadow
+            Column(
+              children: [
+                buildWhiteBar(),
+                buildBlueBarUi(),
+                getMessagesListWidget()
+              ],
+            ),
+            Visibility(
+              visible: isClicked ? false : true,
+              child:
+              Positioned(
+                top: isClicked ? 80 : 180,
+                child: Container(
+                  height: 40,
+                  // margin: EdgeInsets.only(left :20.0 , right: 20.0),
+                  width: ScreenUtil().screenWidth * 0.9,
+                  child: Container(
+                    margin: EdgeInsets.all(5.0),
+                    child: TextFormField(
+                      enabled: true,
+                      decoration: InputDecoration(
+                          hintText: 'Search for a contact',
+                          border: InputBorder.none,
+                          fillColor: Colors.white,
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.search),
+                            onPressed: () {
+                              setState(() {
+                                if (isClicked) {
+                                  isClicked = false;
+                                }
+                                else {
+                                  isClicked = true;
+                                }
+                              });
+                            },)),
+                    ),
                   ),
-                ],
+                  decoration: BoxDecoration(
+                    color: whiteColor,
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.4),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: Offset(0, 3), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                ),
+
               ),
             ),
-
-          ),
-        ),
-        Positioned(
-          top: ScreenUtil().screenHeight - 260,
-          child: getAnimatedSheet(),
+            Positioned(
+              top: ScreenUtil().screenHeight - 280,
+              child: getAnimatedSheet(),
+            )
+          ]
+          ,
         )
-      ]
-      ,
-    ),
     );
   }
 
@@ -191,8 +189,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         visible: isClicked ? true : false
         , child:
     Container(
-      height: 260,
-
+      height: 280,
       child: SingleChildScrollView(
             child: Container(
               decoration: BoxDecoration(
@@ -318,92 +315,96 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   getMessagesListWidget() {
-    return Container(
-      margin: EdgeInsets.only(top: 20),
-      decoration: BoxDecoration(
-        color: whiteColor,
-        borderRadius: BorderRadius.all(Radius.circular(1)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: Offset(0, 3), // changes position of shadow
-          ),
-        ],
-      ),
-      child: ListView.builder(
+    return 
+      
+      Expanded(child: Container(
+        margin: EdgeInsets.only(top: 20),
+        decoration: BoxDecoration(
+          color: whiteColor,
+          borderRadius: BorderRadius.all(Radius.circular(1)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: ListView.builder(
           //shrinkWrap: true,
-          itemCount: messageItems.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Padding(
-                padding: EdgeInsets.only(bottom: 8, left: 20, right: 20),
-                child: Column(children: <Widget>[
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Padding(
-                                  padding: EdgeInsets.only(right: 10),
-                                  child: Image(
-                                      height: 50,
-                                      width: 50,
-                                      image: AssetImage(
-                                        messageItems[index].image,
-                                      ))),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    messageItems[index].name,
-                                    style: SemiBoldTextStyle,
-                                    textAlign: TextAlign.left,
-                                  ),
-                                  Text(
-                                    messageItems[index].lastMessage,
-                                    textAlign: TextAlign.start,
-                                  )
-                                ],
-                              ),
-                            ]),
-                        Row(children: <Widget>[
-                          Icon(
-                            Icons.volume_off,
-                            color: Colors.grey,
-                          ),
-                          Column(
-                            children: [
-                              Text(
-                                messageItems[index].time,
-                                style: TextStyle(color: babyBlueColor),
-                              ),
-                              Container(
-                                  width: 25,
-                                  height: 25,
-                                  margin: EdgeInsets.only(top: 10),
-                                  decoration: new BoxDecoration(
-                                      color: babyBlueColor,
-                                      shape: BoxShape.circle),
-                                  child: Center(
-                                    child: Text(
-                                        messageItems[index]
-                                            .unreadMessages
-                                            .toString(),
-                                        style: WhiteTextStyle),
-                                  ))
-                            ],
-                          ),
-                        ])
-                      ]),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Divider(),
-                  )
-                ]));
-          }),
-    );
+            itemCount: messageItems.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Padding(
+                  padding: EdgeInsets.only(bottom: 8, left: 20, right: 20),
+                  child: Column(children: <Widget>[
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Padding(
+                                    padding: EdgeInsets.only(right: 10),
+                                    child: Image(
+                                        height: 50,
+                                        width: 50,
+                                        image: AssetImage(
+                                          messageItems[index].image,
+                                        ))),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      messageItems[index].name,
+                                      style: SemiBoldTextStyle,
+                                      textAlign: TextAlign.left,
+                                    ),
+                                    Text(
+                                      messageItems[index].lastMessage,
+                                      textAlign: TextAlign.start,
+                                    )
+                                  ],
+                                ),
+                              ]),
+                          Row(children: <Widget>[
+                            Icon(
+                              Icons.volume_off,
+                              color: Colors.grey,
+                            ),
+                            Column(
+                              children: [
+                                Text(
+                                  messageItems[index].time,
+                                  style: TextStyle(color: babyBlueColor),
+                                ),
+                                Container(
+                                    width: 25,
+                                    height: 25,
+                                    margin: EdgeInsets.only(top: 10),
+                                    decoration: new BoxDecoration(
+                                        color: babyBlueColor,
+                                        shape: BoxShape.circle),
+                                    child: Center(
+                                      child: Text(
+                                          messageItems[index]
+                                              .unreadMessages
+                                              .toString(),
+                                          style: WhiteTextStyle),
+                                    ))
+                              ],
+                            ),
+                          ])
+                        ]),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Divider(),
+                    )
+                  ]));
+            }),
+      ))
+
+    ;
   }
 
   animate() {
