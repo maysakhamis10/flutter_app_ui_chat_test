@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_ui_chat/Screens/colors.dart';
 
-import 'colors.dart';
 
 const titleTextStyle =
 TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black);

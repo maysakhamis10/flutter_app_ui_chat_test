@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:ui';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app_ui_chat/Utils/Styles.dart';
-import 'package:flutter_app_ui_chat/Utils/colors.dart';
 import 'package:flutter_screenutil/screenutil.dart';
+import 'colors.dart';
 import 'message_model.dart';
 import 'messages_mock.dart';
 
@@ -36,42 +38,42 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     messagesMap = jsonDecode(messagesData)["messages"] as List;
     messageItems =
         List<Message>.from(messagesMap.map((i) => Message.fromJson(i)));
-    // animationController =
-    //     AnimationController(vsync: this, duration: Duration(milliseconds: 500))
-    //       ..addListener(() {
-    //         setState(() {});
-    //       });
-    // animationIcon =
-    //     Tween<double>(begin: 0.0, end: 1.0).animate(animationController);
-    // _controller = AnimationController(
-    //     duration: const Duration(milliseconds: 2000), vsync: this)
-    //   ..addStatusListener((status) {
-    //     if (status == AnimationStatus.completed) {
-    //       _controller.reverse();
-    //     }
-    //     if (status == AnimationStatus.dismissed) {
-    //       // Navigator.pop(context);
-    //     }
-    //   });
-    //
-    // transitionTween = Tween<double>(
-    //   begin: 50.0,
-    //   end: 200.0,
-    // ).animate(
-    //   CurvedAnimation(
-    //     parent: _controller,
-    //     curve: Curves.ease,
-    //   ),
-    // );
-    // borderRadius = BorderRadiusTween(
-    //   begin: BorderRadius.circular(75.0),
-    //   end: BorderRadius.circular(0.0),
-    // ).animate(
-    //   CurvedAnimation(
-    //     parent: _controller,
-    //     curve: Curves.ease,
-    //   ),
-    // );
+    animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500))
+          ..addListener(() {
+            setState(() {});
+          });
+    animationIcon =
+        Tween<double>(begin: 0.0, end: 1.0).animate(animationController);
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 2000), vsync: this)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _controller.reverse();
+        }
+        if (status == AnimationStatus.dismissed) {
+          // Navigator.pop(context);
+        }
+      });
+
+    transitionTween = Tween<double>(
+      begin: 50.0,
+      end: 200.0,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.ease,
+      ),
+    );
+    borderRadius = BorderRadiusTween(
+      begin: BorderRadius.circular(75.0),
+      end: BorderRadius.circular(0.0),
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.ease,
+      ),
+    );
   }
 
   @override
@@ -88,19 +90,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarColor: primaryColor));
+          SystemUiOverlayStyle(statusBarColor: primaryColor));
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       resizeToAvoidBottomInset: false,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      // floatingActionButton: FloatingActionButton(
-      //     child: Icon(
-      //       isOpened ? Icons.close : Icons.add,
-      //     ),
-      //     backgroundColor: primaryColor,
-      //     onPressed: () {
-      //       animate();
-      //     }),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(
+            isOpened ? Icons.close : Icons.add,
+          ),
+          backgroundColor: primaryColor,
+          onPressed: () {
+            animate();
+          }),
       bottomNavigationBar: getBottomAppBar(),
       body:
       Stack(
@@ -108,100 +110,134 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         children: [
           Column(
             children: [
-              buildNewUiWhenClicked(),
-              Visibility(
-                child:
-                Container(
-                  margin: EdgeInsets.only(bottom: 15),
-                  height: 190,
-                  color: primaryColor,
-                ),
-                visible: false,
-              ),
+              buildWhiteBar(),
+              buildBlueBarUi(),
               Container(
                   height: ScreenUtil().screenHeight * 0.6,
                   child: getMessagesListWidget())
             ],
           ),
-
           Visibility(
+            visible: isClicked ? false : true ,
             child:
-            Positioned(
-              top: 100,
+          Positioned(
+            top: isClicked ? 80 : 160,
+            child:
+            //Container(
+            // animation: _controller,
+            //  builder: (BuildContext context, Widget child) {
+            Container(
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              height: 40,
+              width: ScreenUtil().screenWidth * 0.9,
               child:
-              //Container(
-              // animation: _controller,
-              //  builder: (BuildContext context, Widget child) {
               Container(
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white),
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                height: 40,
-                width: ScreenUtil().screenWidth * 0.9,
-                child: Container(
-                  color: whiteColor,
-                  child: TextFormField(
-                    enabled: false,
-                    decoration: InputDecoration(
-                        hintText: 'search',
-                        border: InputBorder.none,
-                        filled: true,
-                        fillColor: Colors.white,
-                        suffixIcon: IconButton(
-                          icon: Icon(Icons.search), onPressed: () {
-
+                color: whiteColor,
+                child: TextFormField(
+                  enabled: true,
+                  decoration: InputDecoration(
+                      hintText: 'search',
+                      border: InputBorder.none,
+                      ///filled: true,
+                      fillColor: Colors.white,
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: () {
+                          setState(() {
+                            if(isClicked){
+                              isClicked = false;
+                            }
+                            else{
+                              isClicked = true;
+                            }
+                          });
                         },)),
-                  ),
                 ),
               ),
             ),
-            visible: false,
+
           ),
-
-
-          // Positioned(
-          //   top: ScreenUtil().screenHeight - 250,
-          //   child: getAnimatedSheet(),
-          // )
+          ),
+          Positioned(
+            top: ScreenUtil().screenHeight - 250,
+            child: getAnimatedSheet(),
+          )
         ],
       ),
     );
   }
 
-  Widget buildNewUiWhenClicked(){
+
+ Widget buildBlueBarUi(){
+    return  Visibility(visible: isClicked ? false : true ,
+      child:
+      Container(
+        margin: EdgeInsets.only(bottom: 15),
+        height: 190,
+        color: primaryColor,
+      ),
+    );
+}
+
+  Widget buildWhiteBar() {
     return Visibility(
-      child:  Column(
-       children: [
-         Text('New Chat'),
-         Container(
+        visible: isClicked ? true : false
+        ,child:
+    Container(
+      alignment: Alignment.center,
+      width: ScreenUtil().screenWidth,
+        margin: EdgeInsets.only(bottom: 15),
+        height: 200,
+        color: Colors.white54,
+        child:
+       Container(
+         margin: EdgeInsets.only(top: 80,left: 10),
+         child:  Column(
+           crossAxisAlignment: CrossAxisAlignment.start,
+           children: [
+             Container(
                decoration: BoxDecoration(
                    border: Border.all(color: Colors.white),
                    borderRadius: BorderRadius.all(Radius.circular(10))),
                height: 40,
                width: ScreenUtil().screenWidth * 0.9,
-               child: Container(
+               child:    Container(
                  color: whiteColor,
                  child: TextFormField(
-                   enabled: false,
+                   enabled: true,
                    decoration: InputDecoration(
                        hintText: 'search',
                        border: InputBorder.none,
-                       filled: true,
+                       ///filled: true,
                        fillColor: Colors.white,
                        suffixIcon: IconButton(
-                         icon: Icon(Icons.search), onPressed: () {
-
-                       },)),
+                         icon: Icon(Icons.search),
+                         onPressed: () {
+                           setState(() {
+                             if(isClicked){
+                               isClicked = false;
+                             }
+                             else{
+                               isClicked = true;
+                             }
+                           });
+                         },)),
                  ),
                ),
              ),
+             SizedBox(height: 10,),
+             Text('New Chat', style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold) ),
+             SizedBox(height: 10,),
+             Text('New Group', style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold) ),
+             SizedBox(height: 10,),
 
-
-
-       ],
-     ),
-      visible: true,
-    );
+           ],
+         ),
+       )
+    )
+      );
   }
   
   getBottomAppBar() {
@@ -311,67 +347,67 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         });
   }
 
-  // animate() {
-  //   if (!isOpened) {
-  //     animationController.forward();
-  //     setState(() {
-  //       _myValue = _myNewValue;
-  //     });
-  //     //  getAnimatedSheet();
-  //   } else {
-  //     animationController.reverse();
-  //     setState(() {
-  //       _myValue = 0;
-  //     });
-  //     //   getAnimatedSheet();
-  //   }
-  //   isOpened = !isOpened;
-  // }
-  //
-  // getAnimatedSheet() {
-  //   return AnimatedContainer(
-  //     width: ScreenUtil().screenWidth,
-  //     color: Colors.white,
-  //     duration: duration,
-  //     height: _myValue,
-  //     child: pickingImage(),
-  //   );
-  // }
+  animate() {
+    if (!isOpened) {
+      animationController.forward();
+      setState(() {
+        _myValue = _myNewValue;
+      });
+      //  getAnimatedSheet();
+    } else {
+      animationController.reverse();
+      setState(() {
+        _myValue = 0;
+      });
+      //   getAnimatedSheet();
+    }
+    isOpened = !isOpened;
+  }
+
+  getAnimatedSheet() {
+    return AnimatedContainer(
+      width: ScreenUtil().screenWidth,
+      color: Colors.white,
+      duration: duration,
+      height: _myValue,
+      child: pickingImage(),
+    );
+  }
 
   pickingImage() {
     return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Container(
-              padding: EdgeInsets.only(top: 20),
-              width: 250,
-              height: 75,
-              child: RaisedButton(
-                  child: Text('test'),
-                  onPressed: () => {
-                        //Navigator.pop(context),
-                        _controller.forward()
-                      },
-                  color: primaryColor,
-                  textColor: whiteColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)))),
-          Container(
-              padding: EdgeInsets.only(top: 20),
-              width: 250,
-              height: 75,
-              child: RaisedButton(
-                  child: Text('test'),
-                  onPressed: () => {
-                        Navigator.pop(context),
-                      },
-                  color: primaryColor,
-                  textColor: whiteColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)))),
-        ],
-      ),
+      child: ListView(
+          children: <Widget>[
+            Container(
+                margin: EdgeInsets.all(10.0),
+                width: 200,
+                height: 60,
+                child: RaisedButton(
+                    child: Text('test'),
+                    onPressed: () => {
+                      //Navigator.pop(context),
+                      _controller.forward()
+                    },
+                    color: primaryColor,
+                    textColor: whiteColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)))),
+            Container(
+                margin: EdgeInsets.all(10.0),
+                width: 200,
+                height: 60,
+                child: RaisedButton(
+                    child: Text('test'),
+                    onPressed: () => {
+                      Navigator.pop(context),
+                    },
+                    color: primaryColor,
+                    textColor: whiteColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)))),
+          ],
+        ),
+
     );
   }
 }
